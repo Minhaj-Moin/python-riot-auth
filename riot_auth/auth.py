@@ -233,15 +233,30 @@ class RiotAuth:
                                 f"Got unknown error `{err}` during authentication."
                             )
                     elif resp_type == "multifactor":
-                        raise RiotMultifactorError(
-                            "Multi-factor authentication is not currently supported."
-                        )
+                        prompt = "Now wait your email multifactor code and paste it here:\n"
+                        multifactorCode = input(prompt)
+                        multiFactorBody = {
+                            "type": "multifactor",
+                            "rememberDevice": "false",
+                            "code": multifactorCode
+                        }
+                        async with session.put(
+                            "https://auth.riotgames.com/api/v1/authorization",
+                            json = multiFactorBody,
+                            headers = headers,
+                        ) as r:
+                            data: Dict = await r.json()
+                            if("error" in data.keys() and data["error"] == "multifactor_attempt_failed"):
+                                raise RiotMultifactorAttemptError(
+                                    "Multi-factor attempt failed, please try again."
+                                )
                     else:
                         raise RiotUnknownResponseTypeError(
                             f"Got unknown response type `{resp_type}` during authentication."
                         )
                 # endregion
 
+            
             self._cookie_jar = session.cookie_jar
             self.__set_tokens_from_uri(data)
 
