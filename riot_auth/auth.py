@@ -87,6 +87,7 @@ class RiotAuth:
         self.expires_at: int = 0
         self.user_id: Optional[str] = None
         self.entitlements_token: Optional[str] = None
+        self.accdict = None
 
     @staticmethod
     def create_riot_auth_ssl_ctx() -> ssl.SSLContext:
@@ -270,13 +271,14 @@ class RiotAuth:
                 # json={"urn": "urn:entitlement:%"},
             ) as r:
                 self.entitlements_token = (await r.json())["entitlements_token"]
-                with open("accountData.json", "w") as outfile:json.dump({"AccessToken":self.access_token,
+                self.accdict = {"AccessToken":self.access_token,
                                                                 "Scope":self.scope,
                                                                 "IDToken":self.id_token,
                                                                 "TokenType":self.token_type,
                                                                 "ExpiresAt":self.expires_at,
                                                                 "UserID":self.user_id,
-                                                                "EntitlementsToken":self.entitlements_token}, outfile)
+                                                                "EntitlementsToken":self.entitlements_token}
+                with open("accountData.json", "w") as outfile:json.dump(self.accdict, outfile)
 
     async def reauthorize(self) -> bool:
         """
