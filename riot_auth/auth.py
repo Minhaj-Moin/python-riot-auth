@@ -259,7 +259,7 @@ class RiotAuth:
             
             self._cookie_jar = session.cookie_jar
             self.__set_tokens_from_uri(data)
-
+            with open('auth_cookies', 'wb') as f: pickle.dump(session.cookie_jar, f)
             # region Get new entitlements token
             headers["Authorization"] = f"{self.token_type} {self.access_token}"
             headers["user-agent"] = RiotAuth.RIOT_CLIENT_USER_AGENT % "entitlements"
@@ -271,6 +271,13 @@ class RiotAuth:
             ) as r:
                 self.entitlements_token = (await r.json())["entitlements_token"]
             # endregion
+            with open("accountData.json", "w") as outfile:json.dump({"AccessToken":self.access_token,
+                                                                "Scope":self.scope,
+                                                                "IDToken":self.id_token,
+                                                                "TokenType":self.token_type,
+                                                                "ExpiresAt":self.expires_at,
+                                                                "UserID":self.user_id,
+                                                                "EntitlementsToken":self.entitlements_token}, outfile)
 
     async def reauthorize(self) -> bool:
         """
