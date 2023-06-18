@@ -10,7 +10,7 @@ from base64 import urlsafe_b64decode
 from secrets import token_urlsafe
 from typing import Dict, List, Optional, Sequence, Tuple, Union
 from urllib.parse import parse_qsl, urlsplit
-
+import pickle
 import aiohttp
 
 from .auth_exceptions import (
