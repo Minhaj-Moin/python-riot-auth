@@ -270,8 +270,7 @@ class RiotAuth:
                 # json={"urn": "urn:entitlement:%"},
             ) as r:
                 self.entitlements_token = (await r.json())["entitlements_token"]
-            # endregion
-            with open("accountData.json", "w") as outfile:json.dump({"AccessToken":self.access_token,
+                with open("accountData.json", "w") as outfile:json.dump({"AccessToken":self.access_token,
                                                                 "Scope":self.scope,
                                                                 "IDToken":self.id_token,
                                                                 "TokenType":self.token_type,
