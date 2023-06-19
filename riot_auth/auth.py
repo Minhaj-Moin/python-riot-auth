@@ -260,7 +260,7 @@ class RiotAuth:
             
             self._cookie_jar = session.cookie_jar
             self.__set_tokens_from_uri(data)
-            with open('auth_cookies.pkl', 'wb') as f: pickle.dump(self._cookie_jar, f)
+            with open('auth_cookies.pkl', 'wb') as f: pickle.dump(self._cookie_jar._cookies, f)
             # region Get new entitlements token
             headers["Authorization"] = f"{self.token_type} {self.access_token}"
             headers["user-agent"] = RiotAuth.RIOT_CLIENT_USER_AGENT % "entitlements"
