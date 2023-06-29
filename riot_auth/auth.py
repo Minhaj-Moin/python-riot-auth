@@ -238,7 +238,7 @@ class RiotAuth:
                         multifactorCode = input(prompt)
                         multiFactorBody = {
                             "type": "multifactor",
-                            "rememberDevice": "false",
+                            "rememberDevice": "true",
                             "code": multifactorCode
                         }
                         async with session.put(
